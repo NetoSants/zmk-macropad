@@ -1,7 +1,3 @@
-menu "Custom Encoder Driver"
 config CUSTOM_ENCODER
-    bool "Enable custom encoder driver"
-    default y
-    help
-      Custom encoder driver with GPIO interrupt.
-endmenu
+	bool "Custom EC11 Encoder Driver"
+	default y
