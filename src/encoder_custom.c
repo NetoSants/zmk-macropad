@@ -15,7 +15,20 @@ static int8_t enc_table[16] = {0, -1, 1, 0, 1, 0, 0, -1, -1, 0, 0, 1, 0, 1, -1, 
 static uint8_t enc_state = 0;
 
 static void encoder_work_handler(struct k_work *work);
+static void test_work_handler(struct k_work *work);
+
 K_WORK_DEFINE(encoder_work, encoder_work_handler);
+K_WORK_DELAYABLE_DEFINE(test_work, test_work_handler);
+
+static void test_work_handler(struct k_work *work)
+{
+	printk("encoder: test: sending A key\n");
+	zmk_hid_keyboard_press(0x04);
+	zmk_endpoints_send_report(HID_USAGE_KEY);
+	k_sleep(K_MSEC(50));
+	zmk_hid_keyboard_release(0x04);
+	zmk_endpoints_send_report(HID_USAGE_KEY);
+}
 
 static void encoder_isr(const struct device *dev, struct gpio_callback *cb, uint32_t pins)
 {
@@ -59,6 +72,9 @@ static int encoder_init(void)
 	gpio_pin_interrupt_configure(gpio_dev, ENC_A_PIN, GPIO_INT_EDGE_BOTH);
 	gpio_pin_interrupt_configure(gpio_dev, ENC_B_PIN, GPIO_INT_EDGE_BOTH);
 
+	k_work_schedule(&test_work, K_SECONDS(3));
+
+	printk("encoder: initialized\n");
 	return 0;
 }
 
