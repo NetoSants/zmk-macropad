@@ -1,5 +1,4 @@
-# SPDX-License-Identifier: MIT
-
 build:
   cmake: .
   kconfig: Kconfig
+  board_root: .

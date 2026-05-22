@@ -1,6 +1,7 @@
-menuconfig ENCODER_CUSTOM
-	bool "Custom EC11 Encoder Driver"
-	default y
-	help
-	  Custom quadrature encoder driver for EC11 that directly sends
-	  HID consumer reports, bypassing ZMK sensor subsystem.
+menu "Custom Encoder Driver"
+config CUSTOM_ENCODER
+bool "Enable custom encoder driver"
+default y
+help
+  Custom encoder driver with GPIO interrupt.
+endmenu
