@@ -78,11 +78,11 @@ static int encoder_init(void)
     k_work_init(&enc_work, enc_work_handler);
     k_work_init_delayable(&enc_release_work, enc_release_handler);
 
-    gpio_pin_interrupt_configure(gpio_dev, ENC_A_PIN, GPIO_INT_EDGE_BOTH);
-    gpio_pin_interrupt_configure(gpio_dev, ENC_B_PIN, GPIO_INT_EDGE_BOTH);
-
     gpio_init_callback(&enc_cb, enc_isr, BIT(ENC_A_PIN) | BIT(ENC_B_PIN));
     gpio_add_callback(gpio_dev, &enc_cb);
+
+    gpio_pin_interrupt_configure(gpio_dev, ENC_A_PIN, GPIO_INT_EDGE_BOTH);
+    gpio_pin_interrupt_configure(gpio_dev, ENC_B_PIN, GPIO_INT_EDGE_BOTH);
 
     return 0;
 }
