@@ -42,7 +42,31 @@ Firmware ZMK funcional para um macropad de 15 teclas + 3 encoders EC11, handwire
 - Chama `zmk_endpoints_send_report(HID_USAGE_KEY)` após cada press/release
 - Inclui teste automático: digita "A" 3s após boot
 
-## Problemas Encontrados e Corrigidos (22/05/2026)
+## Progresso (22/05/2026 - Sessão Final)
+
+### Root Cause #1: `CONFIG_EC11_TRIGGER_GLOBAL_THREAD` faltando
+- Kconfig do EC11 default: `EC11_TRIGGER_NONE` → driver compila SEM interrupção de GPIO
+- Sem interrupção, o driver fica inerte (polling manual nunca chamado)
+- Build #20: adicionado `CONFIG_EC11_TRIGGER_GLOBAL_THREAD=y`
+- **Ainda não funcionou** — havia segundo problema
+
+### Root Cause #2: `steps=60` com default `triggers_per_rotation=20` → 0 triggers
+- Behavior `sensor_rotate_common.c` (v0.3):
+  - `trigger_degrees = 360 / triggers_per_rotation` = 360/20 = 18
+  - Cada pulso reporta `val1 = (1 * 360) / steps` = 360/60 = 6 graus
+  - `triggers = 6 / 18 = 0` (divisão inteira!) — **zero disparos por pulso**
+
+### Fix aplicado no overlay:
+- `steps = <120>` (30 detentes × 4 transições quadrature por detente)
+- `triggers-per-rotation = <30>` (1 trigger por detente)
+- A cada 4 pulsos: remainder acumula 12°, `triggers = 12/12 = 1` ✓
+
+### Lições Aprendidas
+- Legacy mode (`steps=0`, `resolution=4`) tem bug no v0.3: `val1 = ticks ≠ 0`, então `if(val1==0)` shim NÃO funciona
+- Único modo funcional: `steps` + `triggers-per-rotation` com a matemática correta
+- `clk-gpios`/`dt-gpios` → `a-gpios`/`b-gpios` (binding `alps,ec11`)
+- `GPIO_INT_EDGE_BOTH` + `setup_int(dev,false)` mascara ambos os pinos no primeiro ISR
+- Para testar: flashar firmware, rotacionar encoder devagar, verificar se USB envia UP/DOWN
 
 ### 1. Macro HID errada (build #14)
 - Código antigo usava `HID_USAGE_KEY_KEYBOARD_UP` (não existe no ZMK v0.3)

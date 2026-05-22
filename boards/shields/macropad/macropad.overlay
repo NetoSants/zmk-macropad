@@ -15,13 +15,14 @@
     sensors: sensors {
         compatible = "zmk,sensors";
         sensors = <&encoder0>;
+        triggers-per-rotation = <30>;
     };
 
     encoder0: encoder0 {
         compatible = "alps,ec11";
         a-gpios = <&gpio1 13 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
         b-gpios = <&gpio1 15 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-        steps = <60>;
+        steps = <120>;
         status = "okay";
     };
 };
