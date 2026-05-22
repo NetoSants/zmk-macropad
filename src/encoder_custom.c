@@ -42,14 +42,14 @@ static void enc_work_handler(struct k_work *work)
 
     if (pos) {
         uint32_t usage = last_cw
-            ? (HID_USAGE_CONSUMER << 16) | HID_USAGE_CONSUMER_VOLUME_INCREMENT
-            : (HID_USAGE_CONSUMER << 16) | HID_USAGE_CONSUMER_VOLUME_DECREMENT;
+            ? (HID_USAGE_KEY << 16) | HID_USAGE_KEY_KEYBOARD_UPARROW
+            : (HID_USAGE_KEY << 16) | HID_USAGE_KEY_KEYBOARD_DOWNARROW;
 
         zmk_hid_press(usage);
-        zmk_endpoints_send_report(HID_USAGE_CONSUMER);
+        zmk_endpoints_send_report(HID_USAGE_KEY);
         k_sleep(K_MSEC(10));
         zmk_hid_release(usage);
-        zmk_endpoints_send_report(HID_USAGE_CONSUMER);
+        zmk_endpoints_send_report(HID_USAGE_KEY);
     }
 }
 
