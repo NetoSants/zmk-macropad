@@ -1,3 +1,5 @@
 build:
+  cmake: CMakeLists.txt
+  kconfig: Kconfig
   settings:
     board_root: .
