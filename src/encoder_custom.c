@@ -2,6 +2,7 @@
 #include <zephyr/device.h>
 #include <zephyr/drivers/gpio.h>
 #include <zmk/hid.h>
+#include <zmk/endpoints.h>
 #include <dt-bindings/zmk/hid_usage.h>
 #include <dt-bindings/zmk/hid_usage_pages.h>
 #include "encoder_custom.h"
@@ -41,6 +42,7 @@ static void enc_release_handler(struct k_work_delayable *work)
         ? (HID_USAGE_CONSUMER << 16) | HID_USAGE_CONSUMER_VOLUME_INCREMENT
         : (HID_USAGE_CONSUMER << 16) | HID_USAGE_CONSUMER_VOLUME_DECREMENT;
     zmk_hid_release(usage);
+    zmk_endpoints_send_report();
 }
 
 static void enc_work_handler(struct k_work *work)
@@ -51,18 +53,20 @@ static void enc_work_handler(struct k_work *work)
     if (pos > 0) {
         uint32_t usage = (HID_USAGE_CONSUMER << 16) | HID_USAGE_CONSUMER_VOLUME_INCREMENT;
         zmk_hid_press(usage);
+        zmk_endpoints_send_report();
         k_work_reschedule(&enc_release_work, K_MSEC(RELEASE_MS));
     } else if (pos < 0) {
         uint32_t usage = (HID_USAGE_CONSUMER << 16) | HID_USAGE_CONSUMER_VOLUME_DECREMENT;
         zmk_hid_press(usage);
+        zmk_endpoints_send_report();
         k_work_reschedule(&enc_release_work, K_MSEC(RELEASE_MS));
     }
 }
 
 static int encoder_init(void)
 {
-    gpio_dev = device_get_binding(ENC_A_PORT);
-    if (!gpio_dev) {
+    gpio_dev = DEVICE_DT_GET(DT_NODELABEL(gpio1));
+    if (!device_is_ready(gpio_dev)) {
         return -ENODEV;
     }
 
