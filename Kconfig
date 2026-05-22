@@ -1,0 +1,7 @@
+menu "Custom Encoder Driver"
+config CUSTOM_ENCODER
+    bool "Enable custom encoder driver"
+    default y
+    help
+      Custom encoder driver with GPIO interrupt and lookup-table decoding.
+endmenu
