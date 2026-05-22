@@ -12,15 +12,17 @@
         row-gpios = <&gpio0 6 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
     };
 
-    encoder_a: encoder_a {
-        compatible = "alps,ec11";
-        a-gpios = <&gpio1 13 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
-        b-gpios = <&gpio1 15 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
-        resolution = <4>;
+    sensors: sensors {
+        compatible = "zmk,sensors";
+        sensors = <&encoder0>;
+        triggers-per-rotation = <30>;
     };
 
-    sensors {
-        compatible = "zmk,keymap-sensors";
-        sensors = <&encoder_a>;
+    encoder0: encoder0 {
+        compatible = "alps,ec11";
+        a-gpios = <&gpio1 13 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+        b-gpios = <&gpio1 15 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+        steps = <120>;
+        status = "okay";
     };
 };
