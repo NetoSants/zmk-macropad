@@ -1,3 +1,0 @@
-config CUSTOM_ENCODER
-	bool "Custom EC11 Encoder Driver"
-	default y
