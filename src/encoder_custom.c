@@ -60,10 +60,10 @@ static void enc_work_handler(struct k_work *work)
         }
 
         zmk_hid_mouse_scroll_set(0, pos > 0 ? 1 : -1);
-        zmk_endpoints_send_report(HID_USAGE_GENERIC_DESKTOP);
+        zmk_endpoints_send_report(HID_USAGE_GEN_DESKTOP);
         k_sleep(K_MSEC(5));
         zmk_hid_mouse_clear();
-        zmk_endpoints_send_report(HID_USAGE_GENERIC_DESKTOP);
+        zmk_endpoints_send_report(HID_USAGE_GEN_DESKTOP);
     }
 }
 
