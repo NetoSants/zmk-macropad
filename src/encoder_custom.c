@@ -37,26 +37,29 @@ static void enc_isr(const struct device *dev, struct gpio_callback *cb, uint32_t
 
 static void enc_work_handler(struct k_work *work)
 {
-    int8_t pos = position;
-    position = 0;
-
-    if (pos) {
-        int8_t steps = pos / 2;
-        if (!steps) {
-            return;
+    while (1) {
+        int key = irq_lock();
+        int8_t pos = position;
+        if (pos >= 2) {
+            position -= 2;
+            irq_unlock(key);
+        } else if (pos <= -2) {
+            position += 2;
+            irq_unlock(key);
+        } else {
+            irq_unlock(key);
+            break;
         }
-        uint32_t usage = (steps > 0)
+
+        uint32_t usage = (pos > 0)
             ? (HID_USAGE_KEY << 16) | HID_USAGE_KEY_KEYBOARD_UPARROW
             : (HID_USAGE_KEY << 16) | HID_USAGE_KEY_KEYBOARD_DOWNARROW;
 
-        uint8_t n = abs(steps);
-        for (uint8_t i = 0; i < n; i++) {
-            zmk_hid_press(usage);
-            zmk_endpoints_send_report(HID_USAGE_KEY);
-            k_sleep(K_MSEC(10));
-            zmk_hid_release(usage);
-            zmk_endpoints_send_report(HID_USAGE_KEY);
-        }
+        zmk_hid_press(usage);
+        zmk_endpoints_send_report(HID_USAGE_KEY);
+        k_sleep(K_MSEC(5));
+        zmk_hid_release(usage);
+        zmk_endpoints_send_report(HID_USAGE_KEY);
     }
 }
 
