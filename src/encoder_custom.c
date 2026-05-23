@@ -59,15 +59,11 @@ static void enc_work_handler(struct k_work *work)
             break;
         }
 
-        uint32_t usage = (pos > 0)
-            ? (HID_USAGE_KEY << 16) | HID_USAGE_KEY_KEYBOARD_UPARROW
-            : (HID_USAGE_KEY << 16) | HID_USAGE_KEY_KEYBOARD_DOWNARROW;
-
-        zmk_hid_press(usage);
-        zmk_endpoints_send_report(HID_USAGE_KEY);
+        zmk_hid_mouse_scroll_set(0, pos > 0 ? 1 : -1);
+        zmk_endpoints_send_report(HID_USAGE_GENERIC_DESKTOP);
         k_sleep(K_MSEC(5));
-        zmk_hid_release(usage);
-        zmk_endpoints_send_report(HID_USAGE_KEY);
+        zmk_hid_mouse_clear();
+        zmk_endpoints_send_report(HID_USAGE_GENERIC_DESKTOP);
     }
 }
 
