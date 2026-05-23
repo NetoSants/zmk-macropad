@@ -3,6 +3,7 @@
 / {
     chosen {
         zmk,kscan = &kscan0;
+        zmk,battery = &vbatt;
     };
 
     kscan0: kscan {
