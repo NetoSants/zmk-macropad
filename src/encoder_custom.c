@@ -3,6 +3,7 @@
 #include <zephyr/drivers/gpio.h>
 #include <zmk/hid.h>
 #include <zmk/endpoints.h>
+#include <zmk/ble.h>
 #include <dt-bindings/zmk/hid_usage.h>
 #include <dt-bindings/zmk/hid_usage_pages.h>
 #include "encoder_custom.h"
@@ -10,6 +11,7 @@
 static const struct device *gpio_dev;
 static struct gpio_callback enc_cb;
 static struct k_work enc_work;
+static struct k_work_delayable ble_switch_work;
 
 static volatile int8_t position;
 static volatile uint8_t last_state;
@@ -53,6 +55,11 @@ static void enc_work_handler(struct k_work *work)
     }
 }
 
+static void ble_switch_handler(struct k_work *work)
+{
+    zmk_endpoints_select_transport(ZMK_TRANSPORT_BLE);
+}
+
 static int encoder_init(void)
 {
     gpio_dev = DEVICE_DT_GET(DT_NODELABEL(gpio1));
@@ -73,6 +80,9 @@ static int encoder_init(void)
 
     gpio_pin_interrupt_configure(gpio_dev, ENC_A_PIN, GPIO_INT_EDGE_BOTH);
     gpio_pin_interrupt_configure(gpio_dev, ENC_B_PIN, GPIO_INT_EDGE_BOTH);
+
+    k_work_init_delayable(&ble_switch_work, ble_switch_handler);
+    k_work_schedule(&ble_switch_work, K_SECONDS(3));
 
     return 0;
 }
