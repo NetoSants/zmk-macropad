@@ -1,6 +1,7 @@
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
 #include <zephyr/drivers/gpio.h>
+#include <zephyr/sys_clock.h>
 #include <zmk/hid.h>
 #include <zmk/endpoints.h>
 #include <zmk/ble.h>
@@ -22,6 +23,13 @@ static const int8_t enc_steps[] = {
 
 static void enc_isr(const struct device *dev, struct gpio_callback *cb, uint32_t pins)
 {
+    // Debounce: skip edges within 500µs of last valid transition
+    static uint32_t last_cycles;
+    uint32_t now = k_cycle_get_32();
+    uint32_t elapsed = k_cyc_to_us_floor32(now - last_cycles);
+    if (elapsed < 500) return;
+    last_cycles = now;
+
     uint8_t a = gpio_pin_get(gpio_dev, ENC_A_PIN);
     uint8_t b = gpio_pin_get(gpio_dev, ENC_B_PIN);
     uint8_t state = (a << 1) | b;
