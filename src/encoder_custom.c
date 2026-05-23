@@ -15,7 +15,6 @@ static struct k_work_delayable ble_switch_work;
 
 static volatile int8_t position;
 static volatile uint8_t last_state;
-static volatile uint8_t last_cw;
 
 static const int8_t enc_steps[] = {
     0, 1, -1, 0, -1, 0, 0, 1, 1, 0, 0, -1, 0, -1, 1, 0,
@@ -32,7 +31,6 @@ static void enc_isr(const struct device *dev, struct gpio_callback *cb, uint32_t
     int8_t step = enc_steps[idx & 0x0F];
     if (step) {
         position += step;
-        last_cw = step > 0;
         k_work_submit(&enc_work);
     }
 }
@@ -43,15 +41,22 @@ static void enc_work_handler(struct k_work *work)
     position = 0;
 
     if (pos) {
-        uint32_t usage = last_cw
+        int8_t steps = pos / 2;
+        if (!steps) {
+            return;
+        }
+        uint32_t usage = (steps > 0)
             ? (HID_USAGE_KEY << 16) | HID_USAGE_KEY_KEYBOARD_UPARROW
             : (HID_USAGE_KEY << 16) | HID_USAGE_KEY_KEYBOARD_DOWNARROW;
 
-        zmk_hid_press(usage);
-        zmk_endpoints_send_report(HID_USAGE_KEY);
-        k_sleep(K_MSEC(10));
-        zmk_hid_release(usage);
-        zmk_endpoints_send_report(HID_USAGE_KEY);
+        uint8_t n = abs(steps);
+        for (uint8_t i = 0; i < n; i++) {
+            zmk_hid_press(usage);
+            zmk_endpoints_send_report(HID_USAGE_KEY);
+            k_sleep(K_MSEC(10));
+            zmk_hid_release(usage);
+            zmk_endpoints_send_report(HID_USAGE_KEY);
+        }
     }
 }
 
