@@ -27,7 +27,7 @@
     transform: transform {
         compatible = "zmk,matrix-transform";
         rows = <3>;
-        cols = <6>;
+        columns = <6>;
         map = <
             RC(0,0) RC(1,0) RC(2,0) RC(3,0) RC(4,0) RC(5,0)
             RC(0,1) RC(1,1) RC(2,1) RC(3,1) RC(4,1) RC(5,1)
