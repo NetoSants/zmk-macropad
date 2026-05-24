@@ -129,7 +129,9 @@ static void ble_switch_handler(struct k_work *work)
 
 static void led_blink_handler(struct k_work *work)
 {
-    gpio_pin_set(gpio0, BLE_LED_PIN, 0);
+    static int on;
+    on = !on;
+    gpio_pin_set(gpio0, BLE_LED_PIN, on);
     k_work_schedule(&led_work, K_MSEC(500));
 }
 
