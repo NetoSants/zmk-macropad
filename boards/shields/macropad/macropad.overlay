@@ -8,6 +8,13 @@
         zmk,battery = &vbatt;
     };
 
+    vbatt: vbatt {
+        compatible = "zmk,battery-voltage-divider";
+        io-channels = <&adc 3>;
+        output-ohms = <100000>;
+        full-ohms = <(100000 + 100000)>;
+    };
+
     kscan0: kscan {
         compatible = "zmk,kscan-gpio-matrix";
         diode-direction = "col2row";
