@@ -27,9 +27,6 @@ static const int8_t enc_steps[] = {
     0, 1, -1, 0, -1, 0, 0, 1, 1, 0, 0, -1, 0, -1, 1, 0,
 };
 
-static uint32_t last_cycles_gpio0;
-static uint32_t last_cycles_gpio1;
-
 static void process_encoder(int idx, const struct device *a_dev, int a_pin,
                             const struct device *b_dev, int b_pin)
 {
@@ -48,10 +45,6 @@ static void process_encoder(int idx, const struct device *a_dev, int a_pin,
 
 static void isr_gpio0(const struct device *dev, struct gpio_callback *cb, uint32_t pins)
 {
-    uint32_t now = k_cycle_get_32();
-    if (k_cyc_to_us_floor32(now - last_cycles_gpio0) < 500) return;
-    last_cycles_gpio0 = now;
-
     if (pins & (BIT(ENC_P_A) | BIT(ENC_P_B)))
         process_encoder(ENC_P, gpio0, ENC_P_A, gpio0, ENC_P_B);
 
@@ -61,10 +54,6 @@ static void isr_gpio0(const struct device *dev, struct gpio_callback *cb, uint32
 
 static void isr_gpio1(const struct device *dev, struct gpio_callback *cb, uint32_t pins)
 {
-    uint32_t now = k_cycle_get_32();
-    if (k_cyc_to_us_floor32(now - last_cycles_gpio1) < 500) return;
-    last_cycles_gpio1 = now;
-
     if (pins & (BIT(ENC_O_A) | BIT(ENC_O_B)))
         process_encoder(ENC_O, gpio1, ENC_O_A, gpio1, ENC_O_B);
 
