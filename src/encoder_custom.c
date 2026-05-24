@@ -96,13 +96,13 @@ static void send_scroll(struct k_work *work)
 
         int dir = pos > 0 ? 1 : -1;
         if (enc->type == TYPE_VOLUME) {
-            uint16_t usage = dir > 0 ? HID_USAGE_CON_VOLUME_INCREMENT
-                                     : HID_USAGE_CON_VOLUME_DECREMENT;
+            uint16_t usage = dir > 0 ? HID_USAGE_CONSUMER_VOLUME_INCREMENT
+                                     : HID_USAGE_CONSUMER_VOLUME_DECREMENT;
             zmk_hid_consumer_press(usage);
-            zmk_endpoints_send_consumer_report();
+            zmk_endpoints_send_report(HID_USAGE_CONSUMER);
             k_sleep(K_MSEC(5));
             zmk_hid_consumer_release(usage);
-            zmk_endpoints_send_consumer_report();
+            zmk_endpoints_send_report(HID_USAGE_CONSUMER);
         } else if (enc->type == TYPE_HSCROLL) {
             zmk_hid_mouse_scroll_set(dir, 0);
             zmk_endpoints_send_mouse_report();
