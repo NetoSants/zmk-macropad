@@ -64,10 +64,10 @@ static void send_scroll(struct k_work *work)
             break;
         }
         zmk_hid_mouse_scroll_set(0, pos > 0 ? 1 : -1);
-        zmk_endpoints_send_mouse_report();
+        zmk_endpoint_send_mouse_report();
         k_sleep(K_MSEC(5));
         zmk_hid_mouse_clear();
-        zmk_endpoints_send_mouse_report();
+        zmk_endpoint_send_mouse_report();
     }
 }
 
