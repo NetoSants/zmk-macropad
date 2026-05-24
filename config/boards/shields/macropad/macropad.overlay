@@ -21,4 +21,37 @@
                     <&gpio0 22 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
                     <&gpio0 24 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
     };
+
+    physical_layout0: physical_layout_0 {
+        compatible = "zmk,physical-layout";
+        display-name = "Macropad";
+        transform = <&default_transform>;
+        keys = <
+            &key_physical_pos 0    0     0 19050 19050 0 0
+            &key_physical_pos 3 19050     0 19050 19050 0 0
+            &key_physical_pos 6 38100     0 19050 19050 0 0
+            &key_physical_pos 9 57150     0 19050 19050 0 0
+            &key_physical_pos 12 76200    0 19050 19050 0 0
+            &key_physical_pos 15 95250    0 19050 19050 0 0
+
+            &key_physical_pos 1    0 19050 19050 19050 0 0
+            &key_physical_pos 4 19050 19050 19050 19050 0 0
+            &key_physical_pos 7 38100 19050 19050 19050 0 0
+            &key_physical_pos 10 57150 19050 19050 19050 0 0
+            &key_physical_pos 13 76200 19050 19050 19050 0 0
+            &key_physical_pos 16 95250 19050 19050 19050 0 0
+
+            &key_physical_pos 2    0 38100 19050 19050 0 0
+            &key_physical_pos 5 19050 38100 19050 19050 0 0
+            &key_physical_pos 11 38100 38100 38100 19050 0 0
+            &key_physical_pos 14 76200 38100 19050 19050 0 0
+            &key_physical_pos 17 95250 38100 19050 19050 0 0
+        >;
+    };
+
+    default_transform: default_transform {
+        compatible = "zmk,matrix-transform";
+        rows = <6>;
+        cols = <3>;
+    };
 };
