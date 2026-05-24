@@ -130,6 +130,10 @@ static void ble_switch_handler(struct k_work *work)
 
 static void led_blink_handler(struct k_work *work)
 {
+    if (zmk_ble_active_profile_is_connected()) {
+        gpio_pin_set(led_dev, BLE_LED_PIN, 1);
+        return;
+    }
     static int on;
     on = !on;
     gpio_pin_set(led_dev, BLE_LED_PIN, on);
