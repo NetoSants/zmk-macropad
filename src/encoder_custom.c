@@ -120,10 +120,17 @@ static void send_scroll(struct k_work *work)
 }
 
 static struct k_work_delayable ble_switch_work;
+static struct k_work_delayable led_work;
 
 static void ble_switch_handler(struct k_work *work)
 {
     zmk_endpoints_select_transport(ZMK_TRANSPORT_BLE);
+}
+
+static void led_blink_handler(struct k_work *work)
+{
+    gpio_pin_set(gpio0, BLE_LED_PIN, 0);
+    k_work_schedule(&led_work, K_MSEC(500));
 }
 
 static void init_encoder(int idx, const struct device *a_port, int a_pin,
@@ -170,6 +177,8 @@ static int encoder_init(void)
 
     gpio_pin_configure(gpio0, BLE_LED_PIN, GPIO_OUTPUT);
     gpio_pin_set(gpio0, BLE_LED_PIN, 1);
+    k_work_init_delayable(&led_work, led_blink_handler);
+    k_work_schedule(&led_work, K_MSEC(500));
 
     return 0;
 }
