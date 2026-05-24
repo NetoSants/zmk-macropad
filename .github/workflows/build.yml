@@ -18,7 +18,7 @@ jobs:
 
       - name: Build
         run: |
-          west build -s zmk/app -d build -b nice_nano -- -DZMK_CONFIG=$GITHUB_WORKSPACE/config -DSHIELD=macropad
+          west build -s zmk/app -d build -b nice_nano -- -DZMK_CONFIG=$GITHUB_WORKSPACE/config -DSHIELD=macropad -DZMK_EXTRA_MODULES=$GITHUB_WORKSPACE
 
       - name: Rename
         run: |
