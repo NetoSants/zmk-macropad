@@ -4,7 +4,6 @@
 #include <zephyr/sys_clock.h>
 #include <zmk/hid.h>
 #include <zmk/endpoints.h>
-#include <zmk/ble.h>
 #include <dt-bindings/zmk/hid_usage.h>
 #include <dt-bindings/zmk/hid_usage_pages.h>
 #include "encoder_custom.h"
@@ -131,10 +130,6 @@ static void ble_switch_handler(struct k_work *work)
 
 static void led_blink_handler(struct k_work *work)
 {
-    if (zmk_ble_active_profile_is_connected()) {
-        gpio_pin_set(led_dev, BLE_LED_PIN, 1);
-        return;
-    }
     static int on;
     on = !on;
     gpio_pin_set(led_dev, BLE_LED_PIN, on);
