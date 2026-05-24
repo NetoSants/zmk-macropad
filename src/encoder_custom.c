@@ -10,6 +10,8 @@
 #include "encoder_custom.h"
 
 enum { ENC_O = 0, ENC_P, ENC_Q, NUM_ENCODERS };
+enum { TYPE_SCROLL, TYPE_VOLUME, TYPE_HSCROLL };
+enum { BLE_LED_PIN = 16 };
 
 static const struct device *gpio0;
 static const struct device *gpio1;
@@ -21,7 +23,7 @@ struct enc_state {
     uint8_t last_state;
     volatile int8_t position;
     struct k_work work;
-    bool hscroll;
+    uint8_t type;
 };
 
 static struct enc_state encoders[NUM_ENCODERS];
@@ -91,26 +93,55 @@ static void send_scroll(struct k_work *work)
             irq_unlock(key);
             break;
         }
-        if (enc->hscroll)
-            zmk_hid_mouse_scroll_set(pos > 0 ? 1 : -1, 0);
-        else
-            zmk_hid_mouse_scroll_set(0, pos > 0 ? 1 : -1);
-        zmk_endpoints_send_mouse_report();
-        k_sleep(K_MSEC(5));
-        zmk_hid_mouse_clear();
-        zmk_endpoints_send_mouse_report();
+
+        int dir = pos > 0 ? 1 : -1;
+        if (enc->type == TYPE_VOLUME) {
+            uint16_t usage = dir > 0 ? HID_USAGE_CON_VOLUME_INCREMENT
+                                     : HID_USAGE_CON_VOLUME_DECREMENT;
+            zmk_hid_consumer_press(usage);
+            zmk_endpoints_send_consumer_report();
+            k_sleep(K_MSEC(5));
+            zmk_hid_consumer_release(usage);
+            zmk_endpoints_send_consumer_report();
+        } else if (enc->type == TYPE_HSCROLL) {
+            zmk_hid_mouse_scroll_set(dir, 0);
+            zmk_endpoints_send_mouse_report();
+            k_sleep(K_MSEC(5));
+            zmk_hid_mouse_clear();
+            zmk_endpoints_send_mouse_report();
+        } else {
+            zmk_hid_mouse_scroll_set(0, dir);
+            zmk_endpoints_send_mouse_report();
+            k_sleep(K_MSEC(5));
+            zmk_hid_mouse_clear();
+            zmk_endpoints_send_mouse_report();
+        }
     }
 }
 
 static struct k_work_delayable ble_switch_work;
+static struct k_work_delayable led_work;
+static const struct device *led_dev;
 
 static void ble_switch_handler(struct k_work *work)
 {
     zmk_endpoints_select_transport(ZMK_TRANSPORT_BLE);
 }
 
+static void led_blink_handler(struct k_work *work)
+{
+    if (zmk_ble_active_profile_is_connected()) {
+        gpio_pin_set(led_dev, BLE_LED_PIN, 1);
+        return;
+    }
+    static bool on;
+    on = !on;
+    gpio_pin_set(led_dev, BLE_LED_PIN, on);
+    k_work_schedule(&led_work, K_MSEC(500));
+}
+
 static void init_encoder(int idx, const struct device *a_port, int a_pin,
-                         const struct device *b_port, int b_pin)
+                         const struct device *b_port, int b_pin, uint8_t type)
 {
     gpio_pin_configure(a_port, a_pin, GPIO_INPUT | GPIO_PULL_UP);
     gpio_pin_configure(b_port, b_pin, GPIO_INPUT | GPIO_PULL_UP);
@@ -119,7 +150,7 @@ static void init_encoder(int idx, const struct device *a_port, int a_pin,
     uint8_t b = gpio_pin_get(b_port, b_pin);
     encoders[idx].last_state = (a << 1) | b;
     encoders[idx].position = 0;
-    encoders[idx].hscroll = (idx == ENC_Q);
+    encoders[idx].type = type;
     k_work_init(&encoders[idx].work, send_scroll);
 }
 
@@ -130,9 +161,9 @@ static int encoder_init(void)
     if (!device_is_ready(gpio0) || !device_is_ready(gpio1))
         return -ENODEV;
 
-    init_encoder(ENC_O, gpio1, ENC_O_A, gpio1, ENC_O_B);
-    init_encoder(ENC_P, gpio0, ENC_P_A, gpio0, ENC_P_B);
-    init_encoder(ENC_Q, gpio0, ENC_Q_A, gpio1, ENC_Q_B);
+    init_encoder(ENC_O, gpio1, ENC_O_A, gpio1, ENC_O_B, TYPE_SCROLL);
+    init_encoder(ENC_P, gpio0, ENC_P_A, gpio0, ENC_P_B, TYPE_VOLUME);
+    init_encoder(ENC_Q, gpio0, ENC_Q_A, gpio1, ENC_Q_B, TYPE_HSCROLL);
 
     gpio_init_callback(&cb_gpio0, isr_gpio0,
         BIT(ENC_P_A) | BIT(ENC_P_B) | BIT(ENC_Q_A));
@@ -150,6 +181,12 @@ static int encoder_init(void)
 
     k_work_init_delayable(&ble_switch_work, ble_switch_handler);
     k_work_schedule(&ble_switch_work, K_SECONDS(3));
+
+    led_dev = DEVICE_DT_GET(DT_NODELABEL(gpio0));
+    gpio_pin_configure(led_dev, BLE_LED_PIN, GPIO_OUTPUT);
+    gpio_pin_set(led_dev, 1);
+    k_work_init_delayable(&led_work, led_blink_handler);
+    k_work_schedule(&led_work, K_MSEC(500));
 
     return 0;
 }
