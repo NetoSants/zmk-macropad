@@ -19,6 +19,7 @@ struct enc_state {
     volatile int8_t position;
     struct k_work work;
     uint8_t type;
+    uint32_t last_cycle;
 };
 
 static struct enc_state encoders[NUM_ENCODERS];
@@ -27,9 +28,16 @@ static const int8_t enc_steps[] = {
     0, 1, -1, 0, -1, 0, 0, 1, 1, 0, 0, -1, 0, -1, 1, 0,
 };
 
+#define DEBOUNCE_US 1500
+
 static void process_encoder(int idx, const struct device *a_dev, int a_pin,
                             const struct device *b_dev, int b_pin)
 {
+    uint32_t now = k_cycle_get_32();
+    if (k_cyc_to_us_floor32(now - encoders[idx].last_cycle) < DEBOUNCE_US)
+        return;
+    encoders[idx].last_cycle = now;
+
     uint8_t a = gpio_pin_get(a_dev, a_pin);
     uint8_t b = gpio_pin_get(b_dev, b_pin);
     uint8_t state = (a << 1) | b;
