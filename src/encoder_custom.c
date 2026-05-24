@@ -11,6 +11,7 @@
 
 enum { ENC_O = 0, ENC_P, ENC_Q, NUM_ENCODERS };
 enum { TYPE_SCROLL, TYPE_VOLUME, TYPE_HSCROLL };
+enum { BLE_LED_PIN = 16 };
 
 static const struct device *gpio0;
 static const struct device *gpio1;
@@ -166,6 +167,9 @@ static int encoder_init(void)
 
     k_work_init_delayable(&ble_switch_work, ble_switch_handler);
     k_work_schedule(&ble_switch_work, K_SECONDS(3));
+
+    gpio_pin_configure(gpio0, BLE_LED_PIN, GPIO_OUTPUT);
+    gpio_pin_set(gpio0, BLE_LED_PIN, 1);
 
     return 0;
 }
