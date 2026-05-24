@@ -21,6 +21,7 @@ struct enc_state {
     uint8_t last_state;
     volatile int8_t position;
     struct k_work work;
+    bool hscroll;
 };
 
 static struct enc_state encoders[NUM_ENCODERS];
@@ -90,7 +91,10 @@ static void send_scroll(struct k_work *work)
             irq_unlock(key);
             break;
         }
-        zmk_hid_mouse_scroll_set(0, pos > 0 ? 1 : -1);
+        if (enc->hscroll)
+            zmk_hid_mouse_scroll_set(pos > 0 ? 1 : -1, 0);
+        else
+            zmk_hid_mouse_scroll_set(0, pos > 0 ? 1 : -1);
         zmk_endpoints_send_mouse_report();
         k_sleep(K_MSEC(5));
         zmk_hid_mouse_clear();
@@ -115,6 +119,7 @@ static void init_encoder(int idx, const struct device *a_port, int a_pin,
     uint8_t b = gpio_pin_get(b_port, b_pin);
     encoders[idx].last_state = (a << 1) | b;
     encoders[idx].position = 0;
+    encoders[idx].hscroll = (idx == ENC_Q);
     k_work_init(&encoders[idx].work, send_scroll);
 }
 
