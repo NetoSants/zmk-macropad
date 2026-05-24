@@ -3,4 +3,30 @@ on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build:
-    uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@main
+    runs-on: ubuntu-latest
+    container:
+      image: zmkfirmware/zmk-build-arm:stable
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Initialize
+        run: |
+          west init -l config
+          west update --fetch-opt=--filter=tree:0
+          west zephyr-export
+
+      - name: Build
+        run: |
+          west build -s zmk/app -d build -b nice_nano -- -DZMK_CONFIG=$GITHUB_WORKSPACE/config -DSHIELD=macropad
+
+      - name: Rename
+        run: |
+          mkdir artifacts
+          cp build/zephyr/zmk.uf2 artifacts/macropad-nice_nano-zmk.uf2
+
+      - name: Upload
+        uses: actions/upload-artifact@v7
+        with:
+          name: firmware
+          path: artifacts/
