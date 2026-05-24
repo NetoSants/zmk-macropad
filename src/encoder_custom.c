@@ -4,13 +4,13 @@
 #include <zephyr/sys_clock.h>
 #include <zmk/hid.h>
 #include <zmk/endpoints.h>
+#include <zmk/ble.h>
 #include <dt-bindings/zmk/hid_usage.h>
 #include <dt-bindings/zmk/hid_usage_pages.h>
 #include "encoder_custom.h"
 
 enum { ENC_O = 0, ENC_P, ENC_Q, NUM_ENCODERS };
 enum { TYPE_SCROLL, TYPE_VOLUME, TYPE_HSCROLL };
-enum { BLE_LED_PIN = 16 };
 
 static const struct device *gpio0;
 static const struct device *gpio1;
@@ -120,20 +120,9 @@ static void send_scroll(struct k_work *work)
 
 static struct k_work_delayable ble_switch_work;
 
-static struct k_work_delayable led_work;
-static const struct device *led_dev;
-
 static void ble_switch_handler(struct k_work *work)
 {
     zmk_endpoints_select_transport(ZMK_TRANSPORT_BLE);
-}
-
-static void led_blink_handler(struct k_work *work)
-{
-    static int on;
-    on = !on;
-    gpio_pin_set(led_dev, BLE_LED_PIN, on);
-    k_work_schedule(&led_work, K_MSEC(500));
 }
 
 static void init_encoder(int idx, const struct device *a_port, int a_pin,
@@ -177,12 +166,6 @@ static int encoder_init(void)
 
     k_work_init_delayable(&ble_switch_work, ble_switch_handler);
     k_work_schedule(&ble_switch_work, K_SECONDS(3));
-
-    led_dev = DEVICE_DT_GET(DT_NODELABEL(gpio0));
-    gpio_pin_configure(led_dev, BLE_LED_PIN, GPIO_OUTPUT);
-    gpio_pin_set(led_dev, 1);
-    k_work_init_delayable(&led_work, led_blink_handler);
-    k_work_schedule(&led_work, K_MSEC(500));
 
     return 0;
 }
