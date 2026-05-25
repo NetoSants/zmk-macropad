@@ -6,6 +6,7 @@
     chosen {
         zmk,kscan = &kscan0;
         zmk,physical-layout = &physical_layout;
+        zmk,studio-rpc-uart = &studio_rpc_usb_uart;
     };
 
     kscan0: kscan {
@@ -60,5 +61,11 @@
             , <&key_physical_attrs 100 100  400  200     0   0   0>
             , <&key_physical_attrs 100 100  500  200     0   0   0>
             ;
+    };
+};
+
+&zephyr_udc0 {
+    studio_rpc_usb_uart: studio_rpc_usb_uart {
+        compatible = "zephyr,cdc-acm-uart";
     };
 };
