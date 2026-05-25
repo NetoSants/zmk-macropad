@@ -1,4 +1,5 @@
 #include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/regulator/nrf5x.h>
 
 / {
     chosen {
@@ -13,4 +14,12 @@
         row-gpios = <&gpio0 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>,
                     <&gpio0 8 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
     };
+};
+
+&reg0 {
+    status = "okay";
+};
+
+&reg1 {
+    regulator-initial-mode = <NRF5X_REG_MODE_DCDC>;
 };
