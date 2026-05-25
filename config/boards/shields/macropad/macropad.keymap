@@ -18,7 +18,7 @@
             bindings = <
                 &kp A &kp D &kp G &kp I &kp L &kp O
                 &kp B &kp E &kp H &kp J &kp M &kp P
-                &kp C &kp F &kp NONE &kp K &kp N &kp Q
+                &kp C &kp F &none &kp K &kp N &kp Q
             >;
         };
     };
