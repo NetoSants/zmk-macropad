@@ -1,7 +1,17 @@
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/studio.h>
 
 / {
+    combos {
+        compatible = "zmk,combos";
+        combo_studio_unlock {
+            timeout-ms = <50>;
+            key-positions = <16 17>;
+            bindings = <&studio_unlock>;
+        };
+    };
+
     keymap {
         compatible = "zmk,keymap";
 
@@ -9,7 +19,7 @@
             bindings = <
                 &kp A &kp D &kp G &kp I &kp L &kp O
                 &kp B &kp E &kp H &kp J &kp M &kp P
-                &kp C &kp F &none &kp K &kp N &kp Q
+                &kp C &kp F &kp NONE &kp K &kp N &kp Q
             >;
         };
     };
