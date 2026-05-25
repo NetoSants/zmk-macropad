@@ -1,1 +1,1 @@
-add_subdirectory(src)
+# stub - no source for BLE test
