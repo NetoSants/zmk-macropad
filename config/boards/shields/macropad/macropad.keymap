@@ -18,7 +18,15 @@
             bindings = <
                 &kp A &kp D &kp G &kp I &kp L &kp O
                 &kp B &kp E &kp H &kp J &kp M &kp P
-                &kp C &kp F &none &kp K &kp N &kp Q
+                &kp C &kp F &mo 1 &kp K &kp N &kp Q
+            >;
+        };
+
+        layer_1 {
+            bindings = <
+                &trans &trans &trans &trans &trans &trans
+                &trans &trans &trans &trans &trans &trans
+                &trans &trans &trans &trans &trans &trans
             >;
         };
     };
