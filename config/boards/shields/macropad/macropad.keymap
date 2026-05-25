@@ -2,63 +2,12 @@
 #include <dt-bindings/zmk/keys.h>
 
 / {
-    combos {
-        compatible = "zmk,combos";
-        combo_studio_unlock {
-            timeout-ms = <50>;
-            key-positions = <16 17>;
-            bindings = <&studio_unlock>;
-        };
-    };
-
     keymap {
         compatible = "zmk,keymap";
 
         default_layer {
             bindings = <
-                &kp N1 &kp N2 &kp N3 &kp N4 &kp N5 &kp N6
-                &kp N7 &kp N8 &kp N9 &kp N0 &kp RET &trans
-                &trans &trans &trans &trans &trans &trans
-            >;
-        };
-
-        layer_1 {
-            bindings = <
-                &kp N1 &kp N2 &kp N3 &kp N4 &kp N5 &kp N6
-                &kp N7 &kp N8 &kp N9 &kp N0 &trans &trans
-                &trans &trans &trans &trans &trans &trans
-            >;
-        };
-
-        layer_2 {
-            bindings = <
-                &trans &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans &trans &trans
-            >;
-        };
-
-        layer_3 {
-            bindings = <
-                &trans &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans &trans &trans
-            >;
-        };
-
-        layer_4 {
-            bindings = <
-                &trans &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans &trans &trans
-            >;
-        };
-
-        layer_5 {
-            bindings = <
-                &trans &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans &trans &trans
+                &kp A &kp B
             >;
         };
     };
