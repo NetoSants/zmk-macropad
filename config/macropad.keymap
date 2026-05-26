@@ -55,7 +55,7 @@
             bindings = <
 &kp ESCAPE      &kp TAB       &kp LG(V)  &kp BACKSPACE  &kp DEL    &kp C_MUTE
 &kp LEFT_SHIFT  &kp LC(A)     &kp LC(C)  &kp LC(V)      &kp LC(X)  &Dmute
-&kp LCTRL       &kp LEFT_ALT  &trans     &kp ENTER      &kp LC(Z)  &trans
+&kp LCTRL       &kp LEFT_ALT  &trans     &kp ENTER      &kp LC(Z)  &DmuteAll
             >;
         };
 
