@@ -5,23 +5,22 @@
     combos {
         compatible = "zmk,combos";
 
-        combo_bootloader {
-            timeout-ms = <50>;
-            key-positions = <0 1 2>;
-            bindings = <&bootloader>;
-        };
-
         to1 {
-            bindings = <&to 1>;
-            key-positions = <15 1>;
+            bindings = <&to 0>;
+            key-positions = <15 0>;
             require-prior-idle-ms = <0>;
             timeout-ms = <50>;
         };
 
-        Main {
-            bindings = <&to 0>;
-            key-positions = <15 0>;
+        toRocket {
+            bindings = <&to 1>;
+            key-positions = <15 1>;
             timeout-ms = <50>;
+        };
+
+        toCalc {
+            bindings = <&to 2>;
+            key-positions = <15 2>;
         };
     };
 
@@ -29,17 +28,17 @@
         Dmute: Dmute {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&none &kp RIGHT_SHIFT &kp N9 &kp EQUAL>, <&macro_tap>;
+            bindings = <&kp RS(N9) &kp EQUAL>, <&macro_press>;
 
             label = "DMUTE";
         };
 
-        CopyP: CopyP {
+        DmuteAll: DmuteAll {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&kp LEFT_WIN &kp V>, <&macro_tap>;
+            bindings = <&kp RS(N9) &kp MINUS>, <&macro_press>;
 
-            label = "COPYP";
+            label = "DMUTEALL";
         };
     };
 
@@ -48,9 +47,9 @@
 
         Main {
             bindings = <
-&kp ESCAPE      &kp TAB       &trans     &trans     &Dmute     &kp C_MUTE
-&kp LEFT_SHIFT  &kp LC(A)     &kp LC(C)  &kp LC(V)  &kp LC(X)  &trans
-&kp LCTRL       &kp LEFT_ALT  &trans     &kp SPACE  &kp ENTER  &trans
+&kp ESCAPE      &kp TAB       &kp LG(V)  &kp BACKSPACE  &kp DEL    &kp C_MUTE
+&kp LEFT_SHIFT  &kp LC(A)     &kp LC(C)  &kp LC(V)      &kp LC(X)  &Dmute
+&kp LCTRL       &kp LEFT_ALT  &trans     &kp ENTER      &kp LC(Z)  &trans
             >;
         };
 
