@@ -12,7 +12,7 @@
         };
 
         to1 {
-            bindings = <&to 2>;
+            bindings = <&to 0>;
             key-positions = <15 1>;
         };
 
@@ -35,51 +35,27 @@
     keymap {
         compatible = "zmk,keymap";
 
-        default_layer {
+        Main {
             bindings = <
-&kp ESCAPE      &kp TAB       &kp N3     &kp N4     &kp N5   &kp C_MUTE
+&kp ESCAPE      &kp TAB       &trans     &trans     &trans   &kp C_MUTE
 &kp LEFT_SHIFT  &kp LC(C)     &kp LC(X)  &kp LC(V)  &kp RET  &trans
-&kp LCTRL       &kp LEFT_ALT  &trans     &trans     &trans   &trans
+&kp LCTRL       &kp LEFT_ALT  &trans     &kp SPACE  &trans   &trans
             >;
         };
 
-        layer_2 {
+        Rocketzada {
+            bindings = <
+&kp ESCAPE      &kp Q   &kp W   &kp E    &trans     &trans
+&kp LEFT_SHIFT  &kp A   &kp S   &kp D    &trans     &trans
+&trans          &trans  &trans  &kp TAB  &kp SPACE  &trans
+            >;
+        };
+
+        Calculadora {
             bindings = <
 &kp NUMBER_1  &kp NUMBER_2  &kp NUMBER_3  &kp NUMBER_4  &kp PLUS      &trans
 &kp N5        &kp NUMBER_6  &kp N7        &kp N8        &kp MINUS     &trans
 &kp N9        &kp N0        &trans        &kp SLASH     &kp ASTERISK  &trans
-            >;
-        };
-
-        layer_1 {
-            bindings = <
-&kp N1  &kp N2  &kp N3  &kp N4  &kp N5  &kp N6
-&kp N7  &kp N8  &kp N9  &kp N0  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans
-            >;
-        };
-
-        layer_3 {
-            bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans
-            >;
-        };
-
-        layer_4 {
-            bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans
-            >;
-        };
-
-        layer_5 {
-            bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans
             >;
         };
     };
