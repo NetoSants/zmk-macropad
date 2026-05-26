@@ -22,6 +22,12 @@
             bindings = <&to 2>;
             key-positions = <15 2>;
         };
+
+        print {
+            bindings = <&kp PRINTSCREEN>;
+            key-positions = <1 2 3>;
+            timeout-ms = <50>;
+        };
     };
 
     macros {
