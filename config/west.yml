@@ -4,9 +4,24 @@ manifest:
   remotes:
     - name: zmkfirmware
       url-base: https://github.com/zmkfirmware
+    - name: nrfconnect
+      url-base: https://github.com/nrfconnect
   projects:
     - name: zmk
       remote: zmkfirmware
       import: app/west.yml
+    - name: zephyr
+      remote: nrfconnect
+      revision: v4.1.99-ncs1-snapshot1
+      clone-depth: 1
+      import:
+        name-allowlist:
+          - hal_nordic
+          - cmsis
+          - nrfxlib
+    - name: nrfxlib
+      remote: nrfconnect
+      revision: main
+      path: modules/lib/nrfxlib
   self:
     path: config
