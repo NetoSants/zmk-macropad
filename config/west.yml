@@ -12,8 +12,7 @@ manifest:
       import: app/west.yml
     - name: zephyr
       remote: nrfconnect
-      revision: v4.1.99-ncs1-snapshot1
-      clone-depth: 1
+      revision: 43c5dc730e385c238ce00ea91d1a772709b49abf
       import:
         name-allowlist:
           - hal_nordic
