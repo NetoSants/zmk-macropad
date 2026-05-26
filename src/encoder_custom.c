@@ -90,6 +90,7 @@ static void send_scroll(struct k_work *work)
         }
 
         int dir = pos > 0 ? 1 : -1;
+        if (enc->type != TYPE_VOLUME) dir = -dir;
         if (enc->type == TYPE_VOLUME) {
             uint16_t usage = dir > 0 ? HID_USAGE_CONSUMER_VOLUME_INCREMENT
                                      : HID_USAGE_CONSUMER_VOLUME_DECREMENT;
@@ -135,9 +136,9 @@ static int encoder_init(void)
     if (!device_is_ready(gpio0) || !device_is_ready(gpio1))
         return -ENODEV;
 
-    init_encoder(ENC_O, gpio1, ENC_O_A, gpio1, ENC_O_B, TYPE_SCROLL);
-    init_encoder(ENC_P, gpio0, ENC_P_A, gpio0, ENC_P_B, TYPE_VOLUME);
-    init_encoder(ENC_Q, gpio0, ENC_Q_A, gpio1, ENC_Q_B, TYPE_HSCROLL);
+    init_encoder(ENC_O, gpio1, ENC_O_A, gpio1, ENC_O_B, TYPE_VOLUME);   // topo: volume
+    init_encoder(ENC_P, gpio0, ENC_P_A, gpio0, ENC_P_B, TYPE_HSCROLL);  // meio: scroll H
+    init_encoder(ENC_Q, gpio0, ENC_Q_A, gpio1, ENC_Q_B, TYPE_SCROLL);   // baixo: scroll V
 
     gpio_init_callback(&cb_gpio0, isr_gpio0,
         BIT(ENC_P_A) | BIT(ENC_P_B) | BIT(ENC_Q_A));
