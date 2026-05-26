@@ -99,6 +99,7 @@ static void send_scroll(struct k_work *work)
             k_sleep(K_MSEC(5));
             zmk_hid_consumer_release(usage);
             zmk_endpoint_send_report(HID_USAGE_CONSUMER);
+            k_sleep(K_MSEC(20));
         } else if (enc->type == TYPE_HSCROLL) {
             zmk_hid_mouse_scroll_set(dir, 0);
             zmk_endpoint_send_mouse_report();
