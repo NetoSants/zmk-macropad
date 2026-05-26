@@ -4,10 +4,16 @@
 / {
     combos {
         compatible = "zmk,combos";
+
         combo_bootloader {
             timeout-ms = <50>;
             key-positions = <0 1 2>;
             bindings = <&bootloader>;
+        };
+
+        to1 {
+            bindings = <&to 1>;
+            key-positions = <15 0>;
         };
     };
 
@@ -16,49 +22,49 @@
 
         default_layer {
             bindings = <
-                &kp N1 &kp N2 &kp N3 &kp N4 &kp N5 &kp N6
-                &kp N7 &kp N8 &kp N9 &kp N0 &kp RET &trans
-                &trans &trans &trans &trans &trans &trans
+&kp N1        &kp N2        &kp N3     &kp N4     &kp N5   &kp N6
+&kp LEFT_ALT  &kp LC(C)     &kp LC(X)  &kp LC(V)  &kp RET  &trans
+&kp LCTRL     &kp LEFT_ALT  &trans     &trans     &trans   &trans
             >;
         };
 
         layer_1 {
             bindings = <
-                &kp N1 &kp N2 &kp N3 &kp N4 &kp N5 &kp N6
-                &kp N7 &kp N8 &kp N9 &kp N0 &trans &trans
-                &trans &trans &trans &trans &trans &trans
+&kp N1  &kp N2  &kp N3  &kp N4  &kp N5  &kp N6
+&kp N7  &kp N8  &kp N9  &kp N0  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans
             >;
         };
 
         layer_2 {
             bindings = <
-                &trans &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans &trans &trans
+&trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans
             >;
         };
 
         layer_3 {
             bindings = <
-                &trans &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans &trans &trans
+&trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans
             >;
         };
 
         layer_4 {
             bindings = <
-                &trans &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans &trans &trans
+&trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans
             >;
         };
 
         layer_5 {
             bindings = <
-                &trans &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans &trans &trans
+&trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans
             >;
         };
     };
