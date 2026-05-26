@@ -12,6 +12,7 @@ manifest:
       import: app/west.yml
     - name: zephyr
       remote: nrfconnect
+      repo-path: sdk-zephyr
       revision: 43c5dc730e385c238ce00ea91d1a772709b49abf
       import:
         name-allowlist:
