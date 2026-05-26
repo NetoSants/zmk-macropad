@@ -12,8 +12,23 @@
         };
 
         to1 {
-            bindings = <&to 1>;
+            bindings = <&to 2>;
+            key-positions = <15 1>;
+        };
+
+        Main {
+            bindings = <&to 0>;
             key-positions = <15 0>;
+        };
+    };
+
+    macros {
+        Dmute: Dmute {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&none &kp RIGHT_SHIFT &kp N9 &kp EQUAL>, <&macro_tap>;
+
+            label = "DMUTE";
         };
     };
 
@@ -22,9 +37,17 @@
 
         default_layer {
             bindings = <
-&kp N1        &kp N2        &kp N3     &kp N4     &kp N5   &kp N6
-&kp LEFT_ALT  &kp LC(C)     &kp LC(X)  &kp LC(V)  &kp RET  &trans
-&kp LCTRL     &kp LEFT_ALT  &trans     &trans     &trans   &trans
+&kp ESCAPE      &kp TAB       &kp N3     &kp N4     &kp N5   &kp C_MUTE
+&kp LEFT_SHIFT  &kp LC(C)     &kp LC(X)  &kp LC(V)  &kp RET  &trans
+&kp LCTRL       &kp LEFT_ALT  &trans     &trans     &trans   &trans
+            >;
+        };
+
+        layer_2 {
+            bindings = <
+&kp NUMBER_1  &kp NUMBER_2  &kp NUMBER_3  &kp NUMBER_4  &kp PLUS      &trans
+&kp N5        &kp NUMBER_6  &kp N7        &kp N8        &kp MINUS     &trans
+&kp N9        &kp N0        &trans        &kp SLASH     &kp ASTERISK  &trans
             >;
         };
 
@@ -32,14 +55,6 @@
             bindings = <
 &kp N1  &kp N2  &kp N3  &kp N4  &kp N5  &kp N6
 &kp N7  &kp N8  &kp N9  &kp N0  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans
-            >;
-        };
-
-        layer_2 {
-            bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans
             >;
         };
